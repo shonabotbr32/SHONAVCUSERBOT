@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  voice-boost-bot:
+    build: .
+    container_name: telegram-voice-boost
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./sessions:/app/sessions
+      - ./logs:/app/logs
+      - /run/user/1000/pulse:/tmp/pulseaudio.socket
+    devices:
+      - /dev/snd:/dev/snd
+    privileged: true
+    network_mode: host
+    environment:
+      - PULSE_SERVER=unix:/tmp/pulseaudio.socket
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
